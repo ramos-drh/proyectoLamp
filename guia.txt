@@ -1,0 +1,10 @@
+PUERTOS 22 (ya por defecto), 10.000 (webmin) y 80 (http para apache)
+Instalamos lo necesario para webmin (noheque de paquetes) y apache (apache2).
+El usu para login de Webmin debe ser SUPER USUARIO
+Despliegue de WordPress:
+Requisitos: PHP >= 7.4, MySQL >= 5.6 (o MariaDB >= 10.1) y (soporte para) HTTPS
+Descargamos .zip (y descomp) en máq anfitr y estos arch se subirán al serv a través de FTP.
+Dónde? donde nos interese, en mi caso en dir raíz del host (p.e https://wordpress.com/)
+(en otro caso estaría accesbile en p.e. https://wordpress.com/subdir/, y creo q esto no me interesa))
+HOSTS:
+Creamos (DUPLICAR ARCH CONF) el 1º (SIN HTTPS, para phpmydamin) Y DocumentRoot que apunte al directorio raíz de phpmyadmin
