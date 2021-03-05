@@ -8,3 +8,60 @@ Dónde? donde nos interese, en mi caso en dir raíz del host (p.e https://wordpr
 (en otro caso estaría accesbile en p.e. https://wordpress.com/subdir/, y creo q esto no me interesa))
 HOSTS:
 Creamos (DUPLICAR ARCH CONF) el 1º (SIN HTTPS, para phpmydamin) Y DocumentRoot que apunte al directorio raíz de phpmyadmin
+
+
+4. sftp
+1er usuario (usuphpma): El del host 1, phpmyadmin, http.
+Crear primero el grupo webmasters, al que pertenecerá, y su /home/usuphpma (creado por( y => pertenc a) root). Creamos el useradd --ingroup … --shell (USERADD === ADDUSER enrealidad no, pero muy similar)
+(-d no hace falta pq por defecto se establecerá el q nos interesa, /home/usuphpma). Ahora creamos la subc /html y le damos ownership (chown) al nuevo usu.
+Configuramos lo necesario en sshd_config. Reiniciar ssh
+
+INTENTO1
+Crear primero el grupo webmasters, al que pertenecerá, ?y su /home/usuphpma (creado por( y => pertenc a) root)?. Creamos
+el useradd --ingroup … --home /usr/share/phpmyadmin --shell ... .Le damos ownership (chown) de la carpt /phpmyadmin al nuevo usu. Configuramos lo necesario en sshd_config. Reiniciar ss
+c
+El DocRoot* del host 1 será /usr/share/phpmyadmin.
+*El directorio /var/www/otherdomain.tld debe existir en el sistema con permisos 755 y debe ser propiedad del root o bien del usuario que vaya a gestionar ese sitio web.
+Dentro de este directorio estará el index.html del virtualHost, con permisos 644.
+
+2º usuario (usuwp): El del host 2, wordpress, https.
+[OPCIONES DESCARTADAS
+Su home será /home/usuwp (o /var/www/wordpress o /var/www (no hace falta crearla)), perteneciente al usu root. Primero se creará esta carpeta y luego se creará (el grupo webmasters y) el usuario, indicándole
+(que pertenece al grupo webmasters y) sudo adduser --ingroup webmasters --shell /bin/false --home (su home no hace falta pq la por defecto (/home/usuwp) nos vale o --home /var/www/wordpress o /var/www) USUWP. Dentro de esto, se creará /home/usuwp/html o /var/www/wordpress/html
+o /var/www/wordpress y se hará al usuwp su propietario (sudo chown usuwp:webmasters /ruta). Lo enjaulamos* a /home/usuwp/html (o /var/www/wordpress)
+El DocRoot del host 2 será /home/usuwp/html o /var/www/wordpress/html o /var/www/wordpress (perteneciente al usuwp).
+]
+
+Su home será /var/www/homeusuwp, perteneciente al usu root. Primero se creará esta carpeta y luego se creará (el grupo webmasters y) el usuario, indicándole
+(que pertenece al grupo webmasters y) sudo adduser --ingroup webmasters --shell /bin/false --home /var/www/homeusuwp usuwp
+Dentro de esto, se creará /var/www/homeusuwp/wordpress y se hará al usuwp su propietario (sudo chown usuwp:webmasters /ruta). Lo enjaulamos* a /var/www/homeusuwp/
+El DocRoot del host 2 será /var/www/homeusuwp (?) (perteneciente al usuwp) y servername www.ramos-wp.com. Modif tmbn 2 directivas ssl...
+Habilito el sitio y reinicio. Abro puerto 443. En mi cliente, redirigo la ip al nombre del server.
+
+
+
+*Enjaular:
+Editamos arch /etc/ssh/sshd_config (comentamos y blablabla en chrootDirect establece el dir de enjaulamiento => /var/www/homeusuwp)
+[Guard y reiniciar ssh. Probamos a conect pero me da error así q =>]
+Habil acc serv con pw, + clave primaria; en sshd_config, YES en PasswordAuthentication. Guard y reiniciar ssh.
+
+3ª opción no funciona, pq está enjaulado pero en /var/www; si hago su home /var/www/wordpress => esto debería ser prop del root => habría q hacer una subcarpeta que pertenezca al usu (esta misma podría ser la del usu)
+y si hago chrootDirect /var/www/wordpress => no funciona
+
+AHORA MISMO, SFTP ESTARÁ WORKING, PERO NO PODRÉ VOLVER A CONECTARME POR SSH (no sé pq aunq el usu ubuntu no esté enjaulado);
+PARA ALTERNAR ENTRE SFTP Y SSH => EN /etc/ssh/sshd_config, (DES)COMENTAR usePam yes
+
+Con él, subiremos el fichero unzipped wordpress a /var/www/homeusuwp/wordpress(ya perteneciente al usu).
+Amo a ve, a donde se sube wp?
+Al hosts virtual 2; esto es, /var/www/DocRootHost2 NO, es home/usuftp/html (se sube la carpeta wordpress, no solo su contenido, así estará en /var/www/DocRootHost2/wordpress NO, home/usuftp/html/wordpress). Como lo subiremos con sftp, los dir padre () de la carpeta () donde esté enjaul el usuftp deben ser propiedad del root, y wordpress del usu.
+If you need to upload your files to your web server, rename the wordpress directory to your desired name, then use an FTP client to upload the directory to your desired location within the root directory of your website.
+
+5. D
+6. D
+7. D
+
+MODIF ORIGINAL para que sea el por defecto
+Copiamos el arch conf
+editamos su servername y su docroot
+Habilitamos el sitio y reiniciamos apache
+Configuramos el cliente para redirigirlo a la IP
