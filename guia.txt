@@ -9,7 +9,7 @@ Dónde? donde nos interese, en mi caso en dir raíz del host (p.e https://wordpr
 HOSTS:
 Creamos (DUPLICAR ARCH CONF) el 1º (SIN HTTPS, para phpmydamin) Y DocumentRoot que apunte al directorio raíz de phpmyadmin
 
-
+m
 4. sftp
 1er usuario (usuphpma): El del host 1, phpmyadmin, http.
 Crear primero el grupo webmasters, al que pertenecerá, y su /home/usuphpma (creado por( y => pertenc a) root). Creamos el useradd --ingroup … --shell (USERADD === ADDUSER enrealidad no, pero muy similar)
@@ -35,7 +35,7 @@ El DocRoot del host 2 será /home/usuwp/html o /var/www/wordpress/html o /var/ww
 Su home será /var/www/homeusuwp, perteneciente al usu root. Primero se creará esta carpeta y luego se creará (el grupo webmasters y) el usuario, indicándole
 (que pertenece al grupo webmasters y) sudo adduser --ingroup webmasters --shell /bin/false --home /var/www/homeusuwp usuwp
 Dentro de esto, se creará /var/www/homeusuwp/wordpress y se hará al usuwp su propietario (sudo chown usuwp:webmasters /ruta). Lo enjaulamos* a /var/www/homeusuwp/
-El DocRoot del host 2 será /var/www/homeusuwp (?) (perteneciente al usuwp) y servername www.ramos-wp.com. Modif tmbn 2 directivas ssl...
+El DocRoot del host 2 será /var/www/homeusuwp (?) perteneciente a root/usu&755 y servername www.ramoswp.com ("index.html" con 644). Modif tmbn 2 directivas ssl...
 Habilito el sitio y reinicio. Abro puerto 443. En mi cliente, redirigo la ip al nombre del server.
 
 
